@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fretes e Mudanças - Sistema de Triagem</title>
+  
+  <!-- Fontes de suporte para máxima compatibilidade web/mobile -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========================================================
+       TIPOGRAFIA E PALETA DE CORES DA MARCA
+       ======================================================== */
+    :root {
+      --bg-laranja: #f7a748;
+      --marrom-escuro: #381604;
+      --texto-preto: #000000;
+      --branco: #ffffff;
+      --sombra: rgba(56, 22, 4, 0.18);
+    }
+
+    /* FRETES E MUDANÇAS: Desdemona Regular MST */
+    .font-desdemona {
+      font-family: 'Desdemona Regular MST', 'Desdemona', 'Cinzel Decorative', 'Cinzel', serif;
+      font-weight: 900;
+      color: var(--marrom-escuro);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* OSASCO, GRANDE SÃO PAULO, CAPITAL E LITORAL: Herculano */
+    .font-herculano {
+      font-family: 'Herculano', 'Herculanum', 'Cinzel', serif;
+      font-weight: 700;
+      color: var(--texto-preto);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    /* Demais textos e botões: Luz Gótica Copperplate */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Luz Gótica Copperplate', 'Luz Gotica Copperplate', 'Copperplate', 'Copperplate Gothic Bold', 'Cinzel', serif;
+      color: var(--texto-preto);
+    }
+
+    body {
+      background-color: var(--bg-laranja);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 16px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* ========================================================
+       ESTILOS DE TELA E NAVEGAÇÃO
+       ======================================================== */
+    .screen {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+    .screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================================================
+       CARTÕES E ELEMENTOS VISUAIS
+       ======================================================== */
+    .card {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.92);
+      border: 2px solid var(--marrom-escuro);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 8px 20px var(--sombra);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .banner-container {
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .banner-img {
+      width: 100%;
+      max-height: 260px;
+      object-fit: contain;
+      border-radius: 14px;
+      filter: drop-shadow(0 6px 12px var(--sombra));
+    }
+
+    .banner-title {
+      font-size: 1.85rem;
+      line-height: 1.1;
+      margin-top: 6px;
+      text-shadow: 1px 1px 0px rgba(255,255,255,0.6);
+    }
+
+    .banner-subtitle {
+      font-size: 0.95rem;
+      line-height: 1.3;
+      padding: 0 8px;
+    }
+
+    /* ========================================================
+       CAMPOS, TEXTAREAS E TABELA
+       ======================================================== */
+    label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--marrom-escuro);
+    }
+
+    textarea, input[type="text"], input[type="password"] {
+      width: 100%;
+      background-color: #fffdfa;
+      border: 2px solid var(--marrom-escuro);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 1rem;
+      resize: vertical;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    textarea:focus, input:focus {
+      border-color: #000;
+      box-shadow: 0 0 0 3px rgba(56, 22, 4, 0.15);
+    }
+
+    /* ========================================================
+       BOTÕES SIMPÁTICOS E TÁTEIS
+       ======================================================== */
+    .btn-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 16px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 2px solid var(--marrom-escuro);
+      box-shadow: 0 5px 0 var(--marrom-escuro);
+      transition: all 0.15s ease-in-out;
+      text-decoration: none;
+    }
+
+    .btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 var(--marrom-escuro);
+    }
+
+    /* Variações de Botão */
+    .btn-main {
+      background-color: var(--marrom-escuro);
+      color: var(--branco);
+    }
+    .btn-main * { color: var(--branco); }
+
+    .btn-secondary {
+      background-color: var(--branco);
+      color: var(--marrom-escuro);
+    }
+
+    .btn-danger {
+      background-color: #dc2626;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      box-shadow: none;
+      border: 1px solid #991b1b;
+    }
+
+    /* ========================================================
+       LISTAGEM DE PERGUNTAS E BANCO
+       ======================================================== */
+    .question-item {
+      background: #fff8f0;
+      border: 1.5px solid var(--marrom-escuro);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .question-item input[type="checkbox"] {
+      margin-top: 4px;
+      accent-color: var(--marrom-escuro);
+      transform: scale(1.2);
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--bg-laranja);
+      color: var(--marrom-escuro);
+      font-size: 0.75rem;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      border: 1px solid var(--marrom-escuro);
+    }
+
+    .table-container {
+      max-height: 220px;
+      overflow-y: auto;
+      border: 1.5px solid var(--marrom-escuro);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #fcebd2;
+      position: sticky;
+      top: 0;
+    }
+
+    /* Contatos do rodapé do banner */
+    .contacts-tag {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- ==========================================
+       TELA 1: TELA INICIAL
+       ========================================== -->
+  <section id="screen-home" class="screen active">
+    <div class="banner-container">
+      <!-- Caso a imagem esteja na mesma pasta, ela será carregada aqui -->
+      <img src="1000754056.jpg" alt="Fretes e Mudanças" class="banner-img" onerror="this.style.display='none'">
+      
+      <h1 class="banner-title font-desdemona">FRETES E MUDANÇAS</h1>
+      <p class="banner-subtitle font-herculano">OSASCO, GRANDE SÃO PAULO, CAPITAL E LITORAL</p>
+      
+      <div class="contacts-tag">
+        CONTATO: ERIC (11) 9 5859-7349<br>
+        CONTATO: GILBERTO (11) 9 8194-9225
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="btn-group">
+        <button class="btn btn-main" onclick="irPara('screen-trabalhar')">
+          🚚 TRABALHAR
+        </button>
+        <button class="btn btn-secondary" onclick="abrirModalSenha()">
+          ⚙️ CADASTRO
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       TELA 2: TRABALHAR (INSERIR LISTA DO CLIENTE)
+       ========================================== -->
+  <section id="screen-trabalhar" class="screen">
+    <div class="banner-container">
+      <h2 class="font-desdemona" style="font-size: 1.5rem;">LISTA DE ITENS</h2>
+      <p class="font-herculano" style="font-size: 0.85rem;">COLE A MENSAGEM DO CLIENTE ABAIXO</p>
+    </div>
+
+    <div class="card">
+      <label for="input-lista">Itens enviados pelo cliente:</label>
+      <textarea id="input-lista" rows="7" placeholder="Exemplo:&#10;• 1 sofá de 3 lugares&#10;- 2 colchões e 1 cama&#10;geladeira duplex&#10;4 cadeiras e 1 mesa"></textarea>
+      
+      <div class="btn-group">
+        <button class="btn btn-main" onclick="processarLista()">
+          AVANÇAR ➔
+        </button>
+        <button class="btn btn-secondary" onclick="irPara('screen-home')">
+          VOLTAR AO INÍCIO
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       TELA 3: RESULTADO (LISTA DE PERGUNTAS)
+       ========================================== -->
+  <section id="screen-perguntas" class="screen">
+    <div class="banner-container">
+      <h2 class="font-desdemona" style="font-size: 1.5rem;">PERGUNTAS DO FRETE</h2>
+      <p class="font-herculano" style="font-size: 0.85rem;">DETALHES IDENTIFICADOS PARA O ORÇAMENTO</p>
+    </div>
+
+    <div class="card">
+      <div id="container-perguntas" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">
+        <!-- Perguntas geradas via JS -->
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-main" onclick="copiarPerguntasWhatsApp()">
+          📋 COPIAR MENSAGEM
+        </button>
+        <button class="btn btn-secondary" onclick="irPara('screen-home')">
+          VOLTAR AO INÍCIO
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       TELA 4: CADASTRO (PROTEGIDO POR SENHA)
+       ========================================== -->
+  <section id="screen-cadastro" class="screen">
+    <div class="banner-container">
+      <h2 class="font-desdemona" style="font-size: 1.5rem;">CADASTRO DE PERGUNTAS</h2>
+      <p class="font-herculano" style="font-size: 0.85rem;">CONFIGURAÇÃO DE PALAVRAS E PERGUNTAS</p>
+    </div>
+
+    <div class="card">
+      <div>
+        <label for="cad-palavras">Palavras-chave relacionadas (separadas por vírgula):</label>
+        <input type="text" id="cad-palavras" placeholder="ex: sofa, estofado, poltrona">
+        <small style="font-size: 0.75rem; color: #555;">Pode cadastrar no singular; o sistema reconhece os plurais.</small>
+      </div>
+
+      <div>
+        <label for="cad-pergunta">Pergunta a ser feita ao cliente:</label>
+        <textarea id="cad-pergunta" rows="2" placeholder="ex: O sofá desmonta em módulos ou é peça inteira?"></textarea>
+      </div>
+
+      <button class="btn btn-main" onclick="salvarNovoItem()">
+        SALVAR ITEM
+      </button>
+
+      <hr style="border: none; border-top: 1px dashed var(--marrom-escuro); margin: 6px 0;">
+
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <label>Itens Salvos (<span id="total-registros">0</span>):</label>
+        <div style="display: flex; gap: 4px;">
+          <button onclick="exportarBackup()" style="font-size: 0.75rem; padding: 4px 8px; cursor: pointer; border-radius: 6px; border: 1px solid var(--marrom-escuro);">Backup</button>
+          <label style="font-size: 0.75rem; padding: 4px 8px; cursor: pointer; border-radius: 6px; border: 1px solid var(--marrom-escuro); background: #eee;">
+            Restaurar <input type="file" id="file-backup" accept=".json" style="display: none;" onchange="importarBackup(event)">
+          </label>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 35%;">Palavras</th>
+              <th>Pergunta</th>
+              <th style="width: 45px; text-align: center;">Excluir</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-itens"></tbody>
+        </table>
+      </div>
+
+      <button class="btn btn-secondary" onclick="irPara('screen-home')">
+        VOLTAR AO INÍCIO
+      </button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  /* ========================================================
+     GERENCIAMENTO DO BANCO DE DADOS LOCAL (100% PERSONALIZADO)
+     ======================================================== */
+  const STORAGE_KEY = 'banco_perguntas_frete_custom_v2';
+
+  function carregarBanco() {
+    const dados = localStorage.getItem(STORAGE_KEY);
+    return dados ? JSON.parse(dados) : [];
+  }
+
+  function salvarBanco(dados) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+    atualizarTabelaCadastro();
+  }
+
+  /* ========================================================
+     ROTEAMENTO DE TELAS
+     ======================================================== */
+  function irPara(telaId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(telaId).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function abrirModalSenha() {
+    const senha = prompt("Digite a senha de acesso ao cadastro:");
+    if (senha === "2003") {
+      irPara('screen-cadastro');
+      atualizarTabelaCadastro();
+    } else if (senha !== null) {
+      alert("Senha incorreta!");
+    }
+  }
+
+  /* ========================================================
+     TRATAMENTO DE TEXTO, PLURAIS E SÍMBOLOS
+     ======================================================== */
+  function normalizar(texto) {
+    return texto
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+  }
+
+  // Reduz formas plurais em português para a raiz/singular
+  function radicalizar(palavra) {
+    let p = normalizar(palavra);
+    if (p.endsWith('oes')) return p.slice(0, -3) + 'ao';  // colchões -> colchao, fogões -> fogao
+    if (p.endsWith('aes')) return p.slice(0, -3) + 'ao';
+    if (p.endsWith('ais')) return p.slice(0, -3) + 'al';
+    if (p.endsWith('eis')) return p.slice(0, -3) + 'el';
+    if (p.endsWith('ois')) return p.slice(0, -3) + 'ol';
+    if (p.endsWith('uis')) return p.slice(0, -3) + 'ul';
+    if (p.endsWith('res')) return p.slice(0, -2);
+    if (p.endsWith('zes')) return p.slice(0, -2);
+    if (p.endsWith('ns'))  return p.slice(0, -2) + 'm';
+    if (p.endsWith('es') && p.length > 4) return p.slice(0, -2);
+    if (p.endsWith('s') && !p.endsWith('ss') && p.length > 3) return p.slice(0, -1); // sofás -> sofa, camas -> cama
+    return p;
+  }
+
+  // Remove bullets, hífens, pontuações e quantidades (1., 2x, etc.)
+  function limparLinha(linha) {
+    return linha
+      .replace(/^[\s\t]*[•\-\*\+\~\–\—\>]+[\s\t]*/g, '')
+      .replace(/^[\s\t]*(\d+[\.\)\-\s]*(x|un|unid)?)\s*/gi, '')
+      .replace(/\b(um|uma|dois|duas|tres|quatro|cinco)\b/gi, '')
+      .trim();
+  }
+
+  /* ========================================================
+     PROCESSAMENTO DA LISTA DO CLIENTE
+     ======================================================== */
+  function processarLista() {
+    const rawText = document.getElementById('input-lista').value;
+    if (!rawText.trim()) {
+      alert("Por favor, cole a lista de itens do cliente.");
+      return;
+    }
+
+    const banco = carregarBanco();
+    if (banco.length === 0) {
+      alert("Seu banco de perguntas está vazio! Acesse o 'Cadastro' na tela inicial para registrar seus itens.");
+      return;
+    }
+
+    const linhas = rawText.split('\n');
+    const perguntasIdentificadas = new Map();
+
+    linhas.forEach(linhaOriginal => {
+      const linhaLimpa = limparLinha(linhaOriginal);
+      if (!linhaLimpa) return;
+
+      const linhaNormalizada = normalizar(linhaLimpa);
+      const palavrasDaLinha = linhaNormalizada
+        .split(/[\s,.;/]+/)
+        .map(p => radicalizar(p))
+        .filter(p => p.length >= 2);
+
+      banco.forEach(item => {
+        const correspondeu = item.gatilhos.some(gatilho => {
+          const gatilhoNormal = normalizar(gatilho);
+          const gatilhoRadical = radicalizar(gatilhoNormal);
+
+          const contemExato = linhaNormalizada.includes(gatilhoNormal);
+          const contemRadical = palavrasDaLinha.includes(gatilhoRadical);
+
+          return contemExato || contemRadical;
+        });
+
+        if (correspondeu && !perguntasIdentificadas.has(item.id)) {
+          perguntasIdentificadas.set(item.id, {
+            pergunta: item.pergunta,
+            categoria: item.gatilhos[0]
+          });
+        }
+      });
+    });
+
+    const container = document.getElementById('container-perguntas');
+    container.innerHTML = '';
+
+    if (perguntasIdentificadas.size === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 16px; color: #444; font-size: 0.9rem;">
+          Nenhum item com perguntas cadastradas foi identificado na lista.
+        </div>
+      `;
+    } else {
+      perguntasIdentificadas.forEach((dado, id) => {
+        const div = document.createElement('div');
+        div.className = 'question-item';
+        div.innerHTML = `
+          <input type="checkbox" checked id="chk_${id}" data-pergunta="${dado.pergunta}">
+          <div>
+            <span class="badge">${dado.categoria.toUpperCase()}</span>
+            <div style="font-size: 0.95rem; line-height: 1.3;">${dado.pergunta}</div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    irPara('screen-perguntas');
+  }
+
+  /* ========================================================
+     COPIAR PARA WHATSAPP
+     ======================================================== */
+  function copiarPerguntasWhatsApp() {
+    const checkboxes = document.querySelectorAll('#container-perguntas input[type="checkbox"]:checked');
+    if (checkboxes.length === 0) {
+      alert("Nenhuma pergunta selecionada para copiar.");
+      return;
+    }
+
+    let texto = "Olá! Para planejarmos o veículo certinho e passar o orçamento, você poderia me confirmar alguns detalhes?\n\n";
+    checkboxes.forEach((chk, i) => {
+      texto += `${i + 1}. ${chk.getAttribute('data-pergunta')}\n\n`;
+    });
+    texto += "Além disso: nos endereços de retirada e entrega o acesso é térreo, elevador ou escadas?";
+
+    navigator.clipboard.writeText(texto.trim()).then(() => {
+      alert("Mensagem copiada! Já está pronta para enviar no WhatsApp.");
+    });
+  }
+
+  /* ========================================================
+     CADASTRO E GESTÃO
+     ======================================================== */
+  function salvarNovoItem() {
+    const inputPalavras = document.getElementById('cad-palavras').value;
+    const inputPergunta = document.getElementById('cad-pergunta').value;
+
+    if (!inputPalavras.trim() || !inputPergunta.trim()) {
+      alert("Preencha as palavras-chave e a pergunta correspondente.");
+      return;
+    }
+
+    const gatilhos = inputPalavras.split(',').map(p => p.trim()).filter(p => p.length > 0);
+    const banco = carregarBanco();
+
+    banco.push({
+      id: Date.now(),
+      gatilhos: gatilhos,
+      pergunta: inputPergunta.trim()
+    });
+
+    salvarBanco(banco);
+    document.getElementById('cad-palavras').value = '';
+    document.getElementById('cad-pergunta').value = '';
+    alert("Item cadastrado com sucesso!");
+  }
+
+  function excluirItem(id) {
+    if (confirm("Deseja excluir este item?")) {
+      let banco = carregarBanco();
+      banco = banco.filter(i => i.id !== id);
+      salvarBanco(banco);
+    }
+  }
+
+  function atualizarTabelaCadastro() {
+    const banco = carregarBanco();
+    const corpo = document.getElementById('tabela-itens');
+    document.getElementById('total-registros').textContent = banco.length;
+    corpo.innerHTML = '';
+
+    if (banco.length === 0) {
+      corpo.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #666; padding: 12px;">Nenhum item cadastrado.</td></tr>`;
+      return;
+    }
+
+    banco.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${item.gatilhos.map(g => `<span class="badge" style="margin: 1px;">${g}</span>`).join('')}</td>
+        <td>${item.pergunta}</td>
+        <td style="text-align: center;">
+          <button class="btn btn-danger" onclick="excluirItem(${item.id})">×</button>
+        </td>
+      `;
+      corpo.appendChild(tr);
+    });
+  }
+
+  function exportarBackup() {
+    const banco = carregarBanco();
+    if (banco.length === 0) {
+      alert("Não há dados cadastrados para exportar.");
+      return;
+    }
+    const blob = new Blob([JSON.stringify(banco, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `backup_perguntas_frete_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importarBackup(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const dados = JSON.parse(e.target.result);
+        if (Array.isArray(dados)) {
+          salvarBanco(dados);
+          alert("Banco importado com sucesso!");
+        } else {
+          alert("Arquivo JSON inválido.");
+        }
+      } catch (err) {
+        alert("Erro ao ler o arquivo.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // Inicializa dados na montagem
+  document.addEventListener('DOMContentLoaded', atualizarTabelaCadastro);
+</script>
+
+</body>
+</html>
