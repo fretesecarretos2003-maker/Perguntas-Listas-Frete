@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Fretes e Mudanças</title>
+  <title>Fretes e Mudanças - Sistema Tátil</title>
 
+  <!-- Declaração das fontes locais da marca -->
   <style>
     @font-face {
       font-family: 'DesdemonaFont';
@@ -27,12 +28,19 @@
       font-display: swap;
     }
 
+    /* ========================================================
+       DESIGN SYSTEM - CORES E PARÂMETROS GLOBAIS
+       ======================================================== */
     :root {
       --bg-laranja: #f7a748;
       --marrom-escuro: #381604;
+      --marrom-gradiente: #4d2008;
       --preto: #000000;
       --branco: #ffffff;
-      --card-bg: #fffbf5;
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --sombra-volumetrica: 0 8px 18px rgba(56, 22, 4, 0.28);
+      --sombra-botao: 0 6px 0px #240e02;
+      --sombra-botao-sec: 0 6px 0px rgba(56, 22, 4, 0.25);
     }
 
     * {
@@ -45,107 +53,142 @@
       color: var(--preto);
     }
 
+    /* Tipografia e Hierarquia do Design System */
     .font-desdemona {
       font-family: 'DesdemonaFont', 'Cinzel Decorative', serif;
       color: var(--marrom-escuro);
       letter-spacing: 1.5px;
+      text-transform: uppercase;
     }
 
     .font-herculano {
       font-family: 'HerculanoFont', 'Cinzel', serif;
       color: var(--preto);
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
     }
 
+    /* Padrão de Fundo: Laranja com textura geométrica sutil em baixo contraste */
     html, body {
       width: 100%;
       height: 100%;
       overflow-x: hidden;
       background-color: var(--bg-laranja);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(56, 22, 4, 0.05) 0%, transparent 25%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%),
+        linear-gradient(225deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%);
+      background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
     }
 
-    .app-viewport {
+    /* Estrutura e Escala: Layout centralizado vertical estilo Totem (480px a 520px) */
+    .totem-viewport {
       width: 100%;
       min-height: 100dvh;
-      max-width: 480px;
+      max-width: 500px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
       position: relative;
-      background-color: var(--bg-laranja);
-      padding: env(safe-area-inset-top, 12px) 16px env(safe-area-inset-bottom, 16px) 16px;
+      padding: env(safe-area-inset-top, 14px) 18px env(safe-area-inset-bottom, 18px) 18px;
     }
 
+    /* Telas de Navegação */
     .screen {
       display: none;
       flex: 1;
       width: 100%;
       flex-direction: column;
       justify-content: space-between;
-      animation: fadeIn 0.2s ease-out;
+      animation: totemFade 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
     }
     .screen.active { display: flex; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.98); }
+    @keyframes totemFade {
+      from { opacity: 0; transform: scale(0.97); }
       to { opacity: 1; transform: scale(1); }
     }
 
-    .banner-wrapper {
+    /* Banner e Logo Totem */
+    .totem-header {
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 6px 0;
-    }
-
-    .logo-img {
-      width: 100%;
-      max-height: 40vh;
-      object-fit: contain;
-      border-radius: 18px;
-      box-shadow: 0 10px 25px rgba(56, 22, 4, 0.25);
-      border: 2px solid var(--marrom-escuro);
-      background-color: #f7a748;
-    }
-
-    .mini-header {
       text-align: center;
-      padding: 10px 0 14px 0;
+      padding: 6px 0 10px 0;
     }
-    .mini-header h2 { font-size: 1.4rem; line-height: 1.2; }
-    .mini-header p { font-size: 0.8rem; margin-top: 2px; }
 
-    .content-box {
+    .totem-logo-card {
+      width: 100%;
+      max-height: 38vh;
+      object-fit: contain;
+      border-radius: 20px;
+      border: 3px solid var(--marrom-escuro);
+      background-color: #f7a748;
+      box-shadow: var(--sombra-volumetrica);
+    }
+
+    .totem-titles {
+      margin-top: 10px;
+    }
+    .totem-titles h1 {
+      font-size: 1.55rem;
+      line-height: 1.15;
+    }
+    .totem-titles p {
+      font-size: 0.82rem;
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+
+    /* Superfícies de Apoio: Cartões Táteis Arredondados */
+    .totem-card {
       background: var(--card-bg);
       border: 2.5px solid var(--marrom-escuro);
       border-radius: 22px;
-      padding: 16px;
-      box-shadow: 0 8px 20px rgba(56, 22, 4, 0.2);
+      padding: 18px;
+      box-shadow: var(--sombra-volumetrica);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
       flex: 1;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       overflow-y: auto;
     }
 
-    label { font-size: 0.85rem; font-weight: bold; color: var(--marrom-escuro); }
-    
-    textarea, input[type="text"], input[type="password"] {
+    label {
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: var(--marrom-escuro);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Campos de Entrada: Mínimo de 48px a 56px de altura, cantos 16px */
+    input[type="text"], input[type="password"], textarea {
       width: 100%;
-      background: #ffffff;
+      background: var(--branco);
       border: 2px solid var(--marrom-escuro);
-      border-radius: 14px;
-      padding: 12px;
+      border-radius: 16px;
+      padding: 14px;
       font-size: 1rem;
       user-select: text;
       outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
 
-    /* Campo de senha nativo no programa */
-    .input-senha {
+    input[type="text"], input[type="password"] {
+      height: 54px;
+    }
+
+    textarea:focus, input:focus {
+      border-color: var(--preto);
+      box-shadow: 0 0 0 3px rgba(56, 22, 4, 0.15);
+    }
+
+    .input-senha-totem {
       text-align: center;
       font-size: 1.8rem;
       letter-spacing: 8px;
@@ -153,180 +196,207 @@
       height: 60px;
     }
 
-    .btn-container {
+    /* Botões de Ação Principal: Pílula Completa (border-radius: 40px) e Feedback :active scale: 0.97 */
+    .btn-totem-group {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       width: 100%;
       padding-bottom: 6px;
     }
 
-    .btn {
+    .btn-pill {
       width: 100%;
       height: 56px;
-      border-radius: 18px;
-      font-size: 1rem;
+      border-radius: 40px;
+      font-size: 1.05rem;
       font-weight: 900;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       cursor: pointer;
+      text-transform: uppercase;
+      transition: transform 0.08s ease-in-out, box-shadow 0.08s ease-in-out;
+    }
+
+    .btn-pill:active {
+      transform: scale(0.97) translateY(3px);
+    }
+
+    /* Botão Principal: Gradiente vertical, sombra volumétrica */
+    .btn-pill-primary {
+      background: linear-gradient(180deg, var(--marrom-gradiente) 0%, var(--marrom-escuro) 100%);
+      color: var(--branco);
       border: 2.5px solid var(--marrom-escuro);
-      box-shadow: 0 5px 0 var(--marrom-escuro);
-      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: var(--sombra-botao);
     }
-    .btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 1px 0 var(--marrom-escuro);
+    .btn-pill-primary * { color: var(--branco); }
+    .btn-pill-primary:active {
+      box-shadow: 0 2px 0px #240e02;
     }
 
-    .btn-primary { background-color: var(--marrom-escuro); color: var(--branco); }
-    .btn-primary * { color: var(--branco); }
-    .btn-secondary { background-color: var(--branco); color: var(--marrom-escuro); }
+    /* Botão Secundário Branco / Contraste */
+    .btn-pill-secondary {
+      background: linear-gradient(180deg, #ffffff 0%, #f7f3ee 100%);
+      color: var(--marrom-escuro);
+      border: 2.5px solid var(--marrom-escuro);
+      box-shadow: var(--sombra-botao-sec);
+    }
+    .btn-pill-secondary:active {
+      box-shadow: 0 2px 0px rgba(56, 22, 4, 0.25);
+    }
 
-    .question-row {
-      background: #ffffff;
-      border: 1.5px solid var(--marrom-escuro);
-      border-radius: 12px;
-      padding: 12px;
+    /* Seleção de Opções: Cards Clicáveis e Chips Táteis */
+    .chip-item {
+      background: var(--branco);
+      border: 2px solid var(--marrom-escuro);
+      border-radius: 16px;
+      padding: 12px 14px;
       display: flex;
       gap: 12px;
       align-items: flex-start;
       user-select: text;
+      transition: background 0.15s;
     }
-    .question-row input[type="checkbox"] {
-      margin-top: 3px;
-      transform: scale(1.3);
+    .chip-item input[type="checkbox"] {
+      margin-top: 4px;
+      transform: scale(1.35);
       accent-color: var(--marrom-escuro);
     }
-    .badge-tag {
+    .badge-chip {
       background: var(--bg-laranja);
       color: var(--marrom-escuro);
-      font-size: 0.7rem;
-      font-weight: bold;
-      padding: 2px 6px;
-      border-radius: 4px;
-      border: 1px solid var(--marrom-escuro);
+      font-size: 0.75rem;
+      font-weight: 900;
+      padding: 3px 8px;
+      border-radius: 20px;
+      border: 1.5px solid var(--marrom-escuro);
       display: inline-block;
       margin-bottom: 4px;
     }
 
-    .table-wrapper {
+    /* Tabela de Cadastro e Itens */
+    .table-container-totem {
       max-height: 200px;
       overflow-y: auto;
-      border: 1.5px solid var(--marrom-escuro);
-      border-radius: 10px;
-      background: #fff;
+      border: 2px solid var(--marrom-escuro);
+      border-radius: 16px;
+      background: var(--branco);
     }
-    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-    th, td { padding: 8px; border-bottom: 1px solid #eee; text-align: left; }
-    th { background: #fdf2e2; position: sticky; top: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { padding: 10px; border-bottom: 1px solid #f0e6da; text-align: left; }
+    th { background: #fdf2e2; position: sticky; top: 0; font-weight: bold; }
   </style>
 </head>
 <body>
 
-<div class="app-viewport">
+<div class="totem-viewport">
 
-  <!-- ================= TELA 1: INICIAL ================= -->
+  <!-- ================= TELA 1: INICIAL TOTEM ================= -->
   <section id="screen-home" class="screen active">
-    <div class="banner-wrapper">
-      <img src="logo.jpg" alt="Logo Fretes e Mudanças" class="logo-img" onerror="this.onerror=null; this.src='1000754056.jpg';">
+    <div class="totem-header">
+      <img src="logo.jpg" alt="Fretes e Mudanças" class="totem-logo-card" onerror="this.onerror=null; this.src='1000754056.jpg';">
+      
+      <div class="totem-titles">
+        <h1 class="font-desdemona">FRETES E MUDANÇAS</h1>
+        <p class="font-herculano">OSASCO, GRANDE SÃO PAULO, CAPITAL E LITORAL</p>
+      </div>
     </div>
 
     <div style="flex: 1; display:flex; align-items:center; justify-content:center;">
-      <span id="sync-status" style="font-size: 0.75rem; color: var(--marrom-escuro); font-weight: bold;">
+      <span id="sync-status" style="font-size: 0.8rem; color: var(--marrom-escuro); font-weight: bold; background: rgba(255,255,255,0.7); padding: 4px 14px; border-radius: 20px;">
         Carregando banco da planilha...
       </span>
     </div>
 
-    <div class="btn-container">
-      <button class="btn btn-primary" onclick="irPara('screen-trabalhar')">
+    <div class="btn-totem-group">
+      <button class="btn-pill btn-pill-primary" onclick="irPara('screen-trabalhar')">
         🚚 TRABALHAR
       </button>
-      <button class="btn btn-secondary" onclick="irParaLogin()">
+      <button class="btn-pill btn-pill-secondary" onclick="irParaLogin()">
         ⚙️ CADASTRO
       </button>
     </div>
   </section>
 
-  <!-- ================= TELA 2: SENHA DIRETO NO PROGRAMA ================= -->
+  <!-- ================= TELA 2: SENHA TÁTIL NATIVA ================= -->
   <section id="screen-login" class="screen">
-    <div class="mini-header">
-      <h2 class="font-desdemona">ÁREA RESTRITA</h2>
-      <p class="font-herculano">DIGITE A SENHA DE ACESSO</p>
+    <div class="totem-header">
+      <h2 class="font-desdemona" style="font-size: 1.45rem;">ÁREA RESTRITA</h2>
+      <p class="font-herculano" style="font-size: 0.8rem;">ACESSO DE CONFIGURAÇÃO DO TOTEM</p>
     </div>
 
-    <div class="content-box" style="justify-content: center; align-items: center; text-align: center; gap: 14px;">
-      <span style="font-size: 2.2rem;">🔒</span>
-      <label for="input-senha-acesso" style="font-size: 0.95rem;">SENHA DO SISTEMA:</label>
+    <div class="totem-card" style="justify-content: center; align-items: center; text-align: center; gap: 16px;">
+      <span style="font-size: 2.5rem;">🔒</span>
+      <label for="input-senha-acesso">DIGITE A SENHA DE 4 DÍGITOS:</label>
       
-      <!-- inputmode="numeric" faz subir o teclado numérico do próprio celular -->
-      <input type="password" id="input-senha-acesso" class="input-senha" maxlength="6" inputmode="numeric" placeholder="••••" autocomplete="off">
+      <!-- Aciona o teclado numérico do próprio dispositivo -->
+      <input type="password" id="input-senha-acesso" class="input-senha-totem" maxlength="6" inputmode="numeric" placeholder="••••" autocomplete="off">
       
-      <div id="erro-senha" style="color: #dc2626; font-size: 0.85rem; font-weight: bold; min-height: 18px;"></div>
+      <div id="erro-senha" style="color: #c5221f; font-size: 0.85rem; font-weight: bold; min-height: 20px;"></div>
     </div>
 
-    <div class="btn-container">
-      <button class="btn btn-primary" onclick="verificarSenha()">
+    <div class="btn-totem-group">
+      <button class="btn-pill btn-pill-primary" onclick="verificarSenha()">
         ENTRAR NO CADASTRO ➔
       </button>
-      <button class="btn btn-secondary" onclick="irPara('screen-home')">
+      <button class="btn-pill btn-pill-secondary" onclick="irPara('screen-home')">
         VOLTAR AO INÍCIO
       </button>
     </div>
   </section>
 
-  <!-- ================= TELA 3: TRABALHAR ================= -->
+  <!-- ================= TELA 3: TRABALHAR (INSERIR LISTA) ================= -->
   <section id="screen-trabalhar" class="screen">
-    <div class="mini-header">
-      <h2 class="font-desdemona">LISTA DO CLIENTE</h2>
-      <p class="font-herculano">COLE O TEXTO DO WHATSAPP ABAIXO</p>
+    <div class="totem-header">
+      <h2 class="font-desdemona" style="font-size: 1.45rem;">LISTA DE ITENS</h2>
+      <p class="font-herculano" style="font-size: 0.8rem;">COLE A MENSAGEM DO WHATSAPP ABAIXO</p>
     </div>
 
-    <div class="content-box">
-      <label for="input-lista">Itens enviados:</label>
+    <div class="totem-card">
+      <label for="input-lista">Itens enviados pelo cliente:</label>
       <textarea id="input-lista" style="flex: 1; min-height: 180px;" placeholder="• 1 sofá de 3 lugares&#10;- 2 colchões casal&#10;geladeira duplex&#10;4 cadeiras e mesa"></textarea>
     </div>
 
-    <div class="btn-container">
-      <button class="btn btn-primary" onclick="processarItens()">
+    <div class="btn-totem-group">
+      <button class="btn-pill btn-pill-primary" onclick="processarItens()">
         AVANÇAR ➔
       </button>
-      <button class="btn btn-secondary" onclick="irPara('screen-home')">
+      <button class="btn-pill btn-pill-secondary" onclick="irPara('screen-home')">
         VOLTAR AO INÍCIO
       </button>
     </div>
   </section>
 
-  <!-- ================= TELA 4: PERGUNTAS GERADAS ================= -->
+  <!-- ================= TELA 4: RESULTADO (PERGUNTAS DO FRETE) ================= -->
   <section id="screen-perguntas" class="screen">
-    <div class="mini-header">
-      <h2 class="font-desdemona">PERGUNTAS DO FRETE</h2>
-      <p class="font-herculano">DESMARQUE O QUE NÃO PRECISAR</p>
+    <div class="totem-header">
+      <h2 class="font-desdemona" style="font-size: 1.45rem;">PERGUNTAS DO FRETE</h2>
+      <p class="font-herculano" style="font-size: 0.8rem;">TOQUE PARA DESMARCAR O QUE NÃO PRECISAR</p>
     </div>
 
-    <div class="content-box" id="lista-perguntas-container"></div>
+    <div class="totem-card" id="lista-perguntas-container"></div>
 
-    <div class="btn-container">
-      <button class="btn btn-primary" onclick="copiarMensagemPronta()">
+    <div class="btn-totem-group">
+      <button class="btn-pill btn-pill-primary" onclick="copiarMensagemPronta()">
         📋 COPIAR PERGUNTAS
       </button>
-      <button class="btn btn-secondary" onclick="irPara('screen-home')">
+      <button class="btn-pill btn-pill-secondary" onclick="irPara('screen-home')">
         VOLTAR AO INÍCIO
       </button>
     </div>
   </section>
 
-  <!-- ================= TELA 5: CADASTRO ================= -->
+  <!-- ================= TELA 5: CADASTRO NA PLANILHA ================= -->
   <section id="screen-cadastro" class="screen">
-    <div class="mini-header">
-      <h2 class="font-desdemona">CADASTRO NA PLANILHA</h2>
-      <p class="font-herculano">SINCRONIZADO COM O GOOGLE SHEETS</p>
+    <div class="totem-header">
+      <h2 class="font-desdemona" style="font-size: 1.45rem;">CADASTRO NO SHEETS</h2>
+      <p class="font-herculano" style="font-size: 0.8rem;">SINCRONIZADO ONLINE COM A PLANILHA</p>
     </div>
 
-    <div class="content-box">
+    <div class="totem-card">
       <div>
         <label for="cad-palavras">Palavras-chave (separadas por vírgula):</label>
         <input type="text" id="cad-palavras" placeholder="ex: sofa, estofado, poltrona">
@@ -337,18 +407,18 @@
         <textarea id="cad-pergunta" rows="2" placeholder="ex: O sofá desmonta em módulos ou é inteiro?"></textarea>
       </div>
 
-      <button id="btn-salvar" class="btn btn-primary" style="height: 48px; border-radius: 12px;" onclick="adicionarNaPlanilha()">
+      <button id="btn-salvar" class="btn-pill btn-pill-primary" style="height: 50px; font-size: 0.95rem;" onclick="adicionarNaPlanilha()">
         SALVAR NA PLANILHA
       </button>
 
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
-        <label>Itens na Planilha (<span id="total-cadastrados">0</span>):</label>
-        <button onclick="carregarDadosPlanilha()" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 6px; border: 1px solid var(--marrom-escuro); background: #fff; cursor: pointer;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+        <label>Itens Sincronizados (<span id="total-cadastrados">0</span>):</label>
+        <button onclick="carregarDadosPlanilha()" style="padding: 5px 12px; font-size: 0.75rem; border-radius: 20px; border: 1.5px solid var(--marrom-escuro); background: #fff; cursor: pointer; font-weight: bold;">
           🔄 Atualizar
         </button>
       </div>
 
-      <div class="table-wrapper">
+      <div class="table-container-totem">
         <table>
           <thead>
             <tr>
@@ -361,8 +431,8 @@
       </div>
     </div>
 
-    <div class="btn-container">
-      <button class="btn btn-secondary" onclick="irPara('screen-home')">
+    <div class="btn-totem-group">
+      <button class="btn-pill btn-pill-secondary" onclick="irPara('screen-home')">
         VOLTAR AO INÍCIO
       </button>
     </div>
@@ -371,7 +441,7 @@
 </div>
 
 <script>
-  // COLE AQUI A SUA URL GERADA NO GOOGLE APPS SCRIPT:
+  // URL DO GOOGLE APPS SCRIPT
   const URL_GOOGLE_APPS_SCRIPT = "SUA_URL_DO_APPS_SCRIPT_AQUI";
 
   let bancoOnline = [];
@@ -379,18 +449,15 @@
   function irPara(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  /* Fluxo de Senha Integrado no Programa */
   function irParaLogin() {
     const input = document.getElementById('input-senha-acesso');
     input.value = '';
     document.getElementById('erro-senha').textContent = '';
     irPara('screen-login');
-    // Aciona diretamente o teclado numérico do aparelho celular
-    setTimeout(() => {
-      input.focus();
-    }, 250);
+    setTimeout(() => input.focus(), 250);
   }
 
   function verificarSenha() {
@@ -409,18 +476,17 @@
     }
   }
 
-  // Permite confirmar pressionando a tecla 'Ir'/'Enter' do teclado do celular
   document.getElementById('input-senha-acesso').addEventListener('keyup', function(e) {
     if (e.key === 'Enter') {
       verificarSenha();
     }
   });
 
-  /* Sincronização com Google Sheets */
+  /* Integração Online com Google Sheets */
   async function carregarDadosPlanilha() {
     const statusEl = document.getElementById('sync-status');
     if (URL_GOOGLE_APPS_SCRIPT === "SUA_URL_DO_APPS_SCRIPT_AQUI") {
-      statusEl.textContent = "⚠️ Configure a URL da planilha no script";
+      statusEl.textContent = "⚠️ Insira a URL do Apps Script no código";
       return;
     }
 
@@ -462,10 +528,9 @@
         body: JSON.stringify({ item: palavras, pergunta: pergunta })
       });
 
-      alert("Item gravado na planilha!");
+      alert("Item gravado na planilha com sucesso!");
       document.getElementById('cad-palavras').value = '';
       document.getElementById('cad-pergunta').value = '';
-      
       setTimeout(carregarDadosPlanilha, 1500);
     } catch (err) {
       alert("Erro ao gravar na planilha.");
@@ -475,7 +540,7 @@
     }
   }
 
-  /* Leitura de Texto, Bullets e Plurais */
+  /* Normalização e Singularidade */
   function normalizar(txt) {
     return txt.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
   }
@@ -551,11 +616,11 @@
     } else {
       encontradas.forEach((dado) => {
         const div = document.createElement('div');
-        div.className = 'question-row';
+        div.className = 'chip-item';
         div.innerHTML = `
           <input type="checkbox" checked data-pergunta="${dado.pergunta}">
           <div style="flex: 1;">
-            <span class="badge-tag">${dado.categoria.toUpperCase()}</span>
+            <span class="badge-chip">${dado.categoria.toUpperCase()}</span>
             <div style="font-size: 0.95rem; line-height: 1.3;">${dado.pergunta}</div>
           </div>
         `;
@@ -569,7 +634,7 @@
   function copiarMensagemPronta() {
     const marcados = document.querySelectorAll('#lista-perguntas-container input[type="checkbox"]:checked');
     if (marcados.length === 0) {
-      alert("Nenhuma pergunta marcada para copiar.");
+      alert("Nenhuma pergunta selecionada para copiar.");
       return;
     }
 
@@ -597,7 +662,7 @@
     bancoOnline.forEach(item => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${item.gatilhos.map(g => `<span class="badge-tag">${g}</span>`).join(' ')}</td>
+        <td>${item.gatilhos.map(g => `<span class="badge-chip">${g}</span>`).join(' ')}</td>
         <td>${item.pergunta}</td>
       `;
       corpo.appendChild(tr);
